@@ -31,6 +31,12 @@ export const staffApi = {
   socios() {
     return api.get("/staff/socios");
   },
+  alquileresPendientes() {
+    return api.get("/staff/alquileres");
+  },
+  alquiler(idAlquiler: number) {
+    return api.get(`/staff/alquileres/${idAlquiler}`);
+  },
   devolucion(idAlquiler: number) {
     return api.post(`/staff/alquileres/${idAlquiler}/devolucion`);
   },

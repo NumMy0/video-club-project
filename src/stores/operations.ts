@@ -5,8 +5,10 @@ import { reservationApi, staffApi } from "@/api/services";
 export const useOperationsStore = defineStore("operations", () => {
   const historial = ref<Array<Record<string, unknown>>>([]);
   const socios = ref<Array<Record<string, unknown>>>([]);
+  const alquileresPendientes = ref<Array<Record<string, unknown>>>([]);
   const criticalInventory = ref<Array<Record<string, unknown>>>([]);
   const resumen = ref<Record<string, number>>({});
+  const alquilerDetalle = ref<Record<string, unknown> | null>(null);
   const reservationMessage = ref("");
   const loading = ref(false);
   const error = ref("");
@@ -94,8 +96,49 @@ export const useOperationsStore = defineStore("operations", () => {
 
     try {
       await staffApi.devolucion(idAlquiler);
+      alquileresPendientes.value = alquileresPendientes.value.filter(
+        (item) => Number(item.id_alquiler) !== idAlquiler,
+      );
     } catch (_error) {
       error.value = "No se pudo registrar la devolucion";
+      throw _error;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  async function loadAlquilerDetalle(idAlquiler: number) {
+    loading.value = true;
+    error.value = "";
+
+    try {
+      const { data } = await staffApi.alquiler(idAlquiler);
+      alquilerDetalle.value = data?.data ?? null;
+      return alquilerDetalle.value;
+    } catch (_error) {
+      error.value = "No se pudo cargar el alquiler";
+      alquilerDetalle.value = null;
+      throw _error;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  function clearAlquilerDetalle() {
+    alquilerDetalle.value = null;
+  }
+
+  async function loadAlquileresPendientes() {
+    loading.value = true;
+    error.value = "";
+
+    try {
+      const { data } = await staffApi.alquileresPendientes();
+      alquileresPendientes.value = Array.isArray(data?.data) ? data.data : [];
+      return alquileresPendientes.value;
+    } catch (_error) {
+      error.value = "No se pudieron cargar los alquileres pendientes";
+      alquileresPendientes.value = [];
       throw _error;
     } finally {
       loading.value = false;
@@ -105,8 +148,10 @@ export const useOperationsStore = defineStore("operations", () => {
   return {
     historial,
     socios,
+    alquileresPendientes,
     criticalInventory,
     resumen,
+    alquilerDetalle,
     loading,
     error,
     reservationMessage,
@@ -115,6 +160,9 @@ export const useOperationsStore = defineStore("operations", () => {
     clearReservationMessage,
     loadSocios,
     loadResumenStaff,
+    loadAlquilerDetalle,
+    loadAlquileresPendientes,
+    clearAlquilerDetalle,
     registrarDevolucion,
   };
 });
