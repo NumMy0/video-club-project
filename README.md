@@ -166,17 +166,3 @@ Consulta [.env.example](.env.example) para ver el formato esperado.
 
 ## Documentacion de base de datos
 Ver [README.database.md](README.database.md) para el modelo relacional, reglas y diagramas ER.
-
-## Checklist antes de subir a GitHub
-- [ ] Verificar que [.env](.env) exista solo en tu PC y no se suba al repo.
-- [ ] Confirmar que [.env.example](.env.example) tenga todas las variables necesarias.
-- [ ] Ejecutar `pnpm install`.
-- [ ] Ejecutar `pnpm db:setup` y validar que la base `cinemateca` se crea bien.
-- [ ] Ejecutar `pnpm test`.
-- [ ] Ejecutar `pnpm type-check`.
-- [ ] Ejecutar `pnpm build`.
-- [ ] Probar `pnpm dev` y revisar login, catalogo, reservas, historial y devoluciones.
-- [ ] Revisar que no queden logs temporales de depuracion.
-- [ ] Confirmar que el backend lea variables de entorno y no credenciales hardcodeadas.
-- [ ] Confirmar que el frontend use `VITE_API_BASE_URL`.
-- [ ] Hacer `git status` y verificar que no se incluyan archivos sensibles.
